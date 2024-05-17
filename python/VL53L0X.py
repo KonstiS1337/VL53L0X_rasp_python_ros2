@@ -78,7 +78,7 @@ _I2C_READ_FUNC = CFUNCTYPE(c_int, c_ubyte, c_ubyte, POINTER(c_ubyte), c_ubyte)
 _I2C_WRITE_FUNC = CFUNCTYPE(c_int, c_ubyte, c_ubyte, POINTER(c_ubyte), c_ubyte)
 
 # Load VL53L0X shared lib
-_POSSIBLE_LIBRARY_LOCATIONS = ['../bin'] + site.getsitepackages() + [next(p for p in sys.path if 'site-packages' in p)]
+_POSSIBLE_LIBRARY_LOCATIONS = ['../bin'] + site.getsitepackages() + [site.getusersitepackages()] + [next(p for p in sys.path if 'site-packages' in p)]
 for lib_location in _POSSIBLE_LIBRARY_LOCATIONS:
     try:
         _TOF_LIBRARY = CDLL(lib_location + "/vl53l0x_python.so")
