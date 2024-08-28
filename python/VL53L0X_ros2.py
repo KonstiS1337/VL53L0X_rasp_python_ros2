@@ -11,7 +11,7 @@ class TOFRosPublisher(Node) :
 
         self.declare_parameter("epuck-name","epuck")
 
-        self.tof = VL53L0X.VL53L0X(i2c_bus=4,i2c_address=0x29)
+        self.tof = VL53L0X.VL53L0X()
         self.tof.open()
         self.accuracy_mode = VL53L0X.Vl53l0xAccuracyMode.BETTER # change mode here if you want to use different accuracy modes
         self.tof.start_ranging(self.accuracy_mode)
