@@ -1,20 +1,17 @@
 import VL53L0X
 import rclpy
 from rclpy.node import Node
-import rclpy.publisher
 from std_msgs.msg import Int16
-from rcl_interfaces.msg import SetParametersResult
+#from rcl_interfaces.msg import SetParametersResult
 
 class TOFRosPublisher(Node) :
 
     def __init__(self):
         super().__init__('tof_ros_publisher_node')
 
-        self.declare_parameter("run",True)
-        self.run = True
-        self.add_on_set_parameters_callback(self.parameter_callback)
+        self.declare_parameter("epuck-name","epuck")
 
-        self.tof = VL53L0X.VL53L0X()
+        self.tof = VL53L0X.VL53L0X(i2c_bus=4,i2c_address=0x29)
         self.tof.open()
         self.accuracy_mode = VL53L0X.Vl53l0xAccuracyMode.BETTER # change mode here if you want to use different accuracy modes
         self.tof.start_ranging(self.accuracy_mode)
@@ -27,20 +24,17 @@ class TOFRosPublisher(Node) :
         msg._data = distance
         self.pub.publish(msg)
     
-    def stop(self):
-        self.tof.stop_ranging()
-    
     def clean(self):
         self.tof.stop_ranging()
         self.tof.close()
     
-    def parameter_callback(self, params) -> None:
-        for param in params:
-            if(param.name == "run"):
-                if(not param.value and self.run): self.stop()
-                elif(param.value and not self.run): self.tof.start_ranging(self.accuracy_mode)
+    # def parameter_callback(self, params) -> None:
+    #     for param in params:
+    #         if(param.name == "run"):
+    #             if(not param.value and self.run): self.stop()
+    #             elif(param.value and not self.run): self.tof.start_ranging(self.accuracy_mode)
 
-        return SetParametersResult(successful=True)
+    #     return SetParametersResult(successful=True)
     
 def main(args=None):
     rclpy.init(args=args)
