@@ -1,4 +1,4 @@
-import VL53L0X
+from .VL53L0X import *
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Int16
@@ -9,11 +9,11 @@ class TOFRosPublisher(Node) :
     def __init__(self):
         super().__init__('tof_ros_publisher_node')
 
-        self.declare_parameter("epuck-name","epuck")
+        self.declare_parameter("epuck_name","epuck")
 
-        self.tof = VL53L0X.VL53L0X(i2c_bus=4,i2c_address=0x29)
+        self.tof = VL53L0X(i2c_bus=4,i2c_address=0x29)
         self.tof.open()
-        self.accuracy_mode = VL53L0X.Vl53l0xAccuracyMode.BETTER # change mode here if you want to use different accuracy modes
+        self.accuracy_mode = Vl53l0xAccuracyMode.BETTER # change mode here if you want to use different accuracy modes
         self.tof.start_ranging(self.accuracy_mode)
         self.pub = self.create_publisher(Int16,self.get_parameter("epuck-name").get_parameter_value().string_value + '/tof',1)
         self.timer = self.create_timer(0.1,self.cb)
