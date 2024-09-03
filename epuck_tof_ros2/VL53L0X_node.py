@@ -15,7 +15,7 @@ class TOFRosPublisher(Node) :
         self.tof.open()
         self.accuracy_mode = Vl53l0xAccuracyMode.BETTER # change mode here if you want to use different accuracy modes
         self.tof.start_ranging(self.accuracy_mode)
-        self.pub = self.create_publisher(Int16,self.get_parameter("epuck-name").get_parameter_value().string_value + '/tof',1)
+        self.pub = self.create_publisher(Int16,self.get_parameter("epuck_name").get_parameter_value().string_value + '/tof',1)
         self.timer = self.create_timer(0.1,self.cb)
 
     def cb(self):
